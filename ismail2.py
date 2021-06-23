@@ -263,6 +263,8 @@ def sorti():
             p = cur.fetchall()
             print(Av+" est un sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement3")
+            cur.execute("delete from line"+str(table+1)+" where emplacement1='"+Av+"' or emplacement2='"+Av+"' or emplacement3='"+Av+"'")
+            con.commit()
             break
          elif (Av,) in em2 and ("0",) in em3:
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
