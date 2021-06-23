@@ -246,7 +246,7 @@ def insert_stockage(names,dimension_conteneur):
 def sorti():
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visit = ['cont3','cx12','cont5','cont9','cont12']
+   list_visit = ['cont3','cx3','cont5','cont9','cont12']
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -282,22 +282,27 @@ def sorti():
             cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
             break
-         elif (Av,) in em2 and em3 != ("0",):
+         else:
+            pass
+   for Av in list_visit:
+      for table in range(21):
+
+         if (Av,) in em2 and em3 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+ " not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
             print("hna n7awsso 3la pile khawya bech n7ot conteneur dok nzidha")
-            cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
-            con.commit()
+#            cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
+#            con.commit()
          elif (Av,) in em1 and em2 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
             print("hna n7awsso 3la pile khawya dok nzidha")
-            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
-            con.commit()
+#            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
+#            con.commit()
          else:
             pass
             #print("please verifier votre conteneur il n exsit pas dans ma base de donnes")
