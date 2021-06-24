@@ -286,6 +286,12 @@ def sorti():
             pass
    for Av in list_visit:
       for table in range(21):
+         cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em3 = cur.fetchall()
+         cur.execute("select emplacement2 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em2 = cur.fetchall()
+         cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em1 = cur.fetchall()
 
          if (Av,) in em2 and em3 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
@@ -331,3 +337,4 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
+          
