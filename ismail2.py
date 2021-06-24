@@ -302,8 +302,10 @@ def sorti():
             s = cur.fetchall()
             if s:
                print("deplacer "+em3+" vers line"+str(table+1)+" pile "+s[0][0]+" , emplacement1")
-#            cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
-#            con.commit()
+               cur.execute("update line"+str(table+1)+" SET emplacement1='"+em3+"' where pile = '"+str(s[0][0])+"'")
+               con.commit()
+               cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
+               con.commit()
             return None
          elif (Av,) in em1 and em2 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
@@ -342,4 +344,3 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
-         
