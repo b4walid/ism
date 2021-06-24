@@ -265,7 +265,7 @@ def sorti():
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement3")
             cur.execute("update line"+str(table+1)+" SET emplacement3='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
-            break
+            return None
          elif (Av,) in em2 and ("0",) in em3:
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
             p = cur.fetchall()
@@ -273,7 +273,7 @@ def sorti():
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
             cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
-            break
+            return None
          elif (Av,) in em1 and ("0",) in em2:
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
             p = cur.fetchall()
@@ -281,7 +281,7 @@ def sorti():
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
             cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
-            break
+            return None
          else:
             pass
    for Av in list_visit:
@@ -301,12 +301,14 @@ def sorti():
             print("hna n7awsso 3la pile khawya bech n7ot conteneur dok nzidha")
 #            cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
 #            con.commit()
+            return None
          elif (Av,) in em1 and em2 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
             print("hna n7awsso 3la pile khawya dok nzidha")
+            return None
 #            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
 #            con.commit()
          else:
@@ -337,4 +339,3 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
-          
