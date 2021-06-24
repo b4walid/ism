@@ -298,7 +298,10 @@ def sorti():
             p = cur.fetchall()
             print(Av+ " not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
-            print("hna n7awsso 3la pile khawya bech n7ot conteneur dok nzidha")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            s = cur.fetchall()
+            if s:
+               print("deplacer "+em3+" vers line"+str(table+1)+" pile "+s[0][0]+" , emplacement1")
 #            cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
 #            con.commit()
             return None
@@ -339,3 +342,4 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
+         
