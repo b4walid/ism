@@ -301,8 +301,8 @@ def sorti():
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
             s = cur.fetchall()
             if s:
-               print("deplacer "+str(em3)+" vers line"+str(table+1)+" pile "+s[0][0]+" , emplacement1")
-               cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em3)+"' where pile = '"+str(s[0][0])+"'")
+               print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+" pile "+s[0][0]+" , emplacement1")
+               cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em3[0][0])+"' where pile = '"+str(s[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
                con.commit()
