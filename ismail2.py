@@ -120,7 +120,7 @@ def insert_stockage(names,dimension_conteneur):
  
         if ("0",) in data1:
            if dimension_conteneur == dimension[p]:
-              cur.execute("UPDATE line"+str(i+1)+" SET emplacement1 = "+names+" AND emplacement2 = '0' AND emplacement3 = '0' where pile = "+str(p+1))
+              cur.execute("UPDATE line"+str(i+1)+" SET emplacement1 = '"+names+"',emplacement2 = '0',emplacement3 = '0' where pile = "+str(p+1))
               con.commit()
               return None
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
@@ -246,7 +246,7 @@ def insert_stockage(names,dimension_conteneur):
 def sorti():
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visit = ['cont3','cx3','cont5','cont9','cont12']
+   list_visit = ['cx555','cx77','cont5','cont9','cont12']
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -255,6 +255,7 @@ def sorti():
          em2 = cur.fetchall()
          cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
          em1 = cur.fetchall()
+         #print(str(em1)+'zooba')
          #cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '"+Av+"')
          #p = cur.fetchall()
          #print(str(em3)+"and "+str(em2)+" and"+str(em1))
@@ -292,7 +293,7 @@ def sorti():
          em2 = cur.fetchall()
          cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
          em1 = cur.fetchall()
-
+         #print(em3+"zoova")
          if (Av,) in em2 and em3 != ("0",):
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
             p = cur.fetchall()
@@ -301,21 +302,92 @@ def sorti():
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
             s = cur.fetchall()
             if s:
-               print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+" pile "+s[0][0]+" , emplacement1")
+               print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s[0][0])+", emplacement1")
                cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em3[0][0])+"' where pile = '"+str(s[0][0])+"'")
                con.commit()
-               cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
+               cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                con.commit()
-            return None
-         elif (Av,) in em1 and em2 != ("0",):
+               return None
+            else:
+               cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+               x = cur.fetchall()
+               if x[0][0] not in list_visit:
+                  print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s[0][0])+", emplacement1")
+                  cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em3[0][0])+"' where pile = '"+str(s[0][0])+"'")
+                  con.commit()
+                  cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
+                  con.commit()
+                  return None
+
+         elif (Av,) in em1 and em2 != ("0",) and ("0",) in em3:
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
-            print("hna n7awsso 3la pile khawya dok nzidha")
-            return None
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            s1 = cur.fetchall()
+            if s1:
+               print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s1[0][0])+", emplacement1")
+               cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em2[0][0])+"' where pile = '"+str(s1[0][0])+"'")
+               con.commit()
+               cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0',emplacement3='0' where pile = '"+str(p[0][0])+"'")
+               con.commit()
+               return None
+            else:
+               cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+               x = cur.fetchall()
+               if x[0][0] not in list_visit:
+                  print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s1[0][0])+", emplacement2")
+                  cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em2[0][0])+"' where pile = '"+str(s1[0][0])+"'")
+                  con.commit()
+                  cur.execute("update line"+str(table+1)+" SET emplacement1 = '0' emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
+                  con.commit()
+                  return None
 #            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
 #            con.commit()
+         elif (Av,) in em1 and em2 != ("0",) and em3 != ("0"):
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
+            p1 = cur.fetchall()
+            print(Av+" not sommet")
+            print(Av+" est dans la line"+str(table+1)+", pile "+str(p1[0][0])+", emplacement1")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            s2 = cur.fetchall()
+            if s2:
+               print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s2[0][0])+", emplacement1")
+               cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em3[0][0])+"' where pile = '"+str(s2[0][0])+"'")
+               con.commit()
+               cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
+               con.commit()
+            else:
+               cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+               x = cur.fetchall()
+               if x[0][0] not in list_visit:
+                  print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em3[0][0])+"' where pile = '"+str(x[0][0])+"'")
+                  con.commit()
+                  cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
+                  con.commit()
+
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            s3 = cur.fetchall()
+            if s3:
+               print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s3[0][0])+", emplacement1")
+               cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em2[0][0])+"' where pile = '"+str(s3[0][0])+"'")
+               con.commit()
+               cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'") 
+               con.commit()
+               return None
+            else:
+               cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+               x = cur.fetchall()
+               if x[0][0] not in list_visit:
+                  print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em2[0][0])+"' where pile = '"+str(x[0][0])+"'")
+                  con.commit()
+                  cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
+                  con.commit()
+                  return None
+
          else:
             pass
             #print("please verifier votre conteneur il n exsit pas dans ma base de donnes")
@@ -344,3 +416,4 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
+        
