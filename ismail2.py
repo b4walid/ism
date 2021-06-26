@@ -246,7 +246,7 @@ def insert_stockage(names,dimension_conteneur):
 def sorti():
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visit = ['cx555','cx77','cont5','cont9','cont12']
+   list_visit = ['cx11','cont12']
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -424,8 +424,6 @@ def sorti():
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   return None
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
-            y = cur.fetchall()
             elif y :
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3") 
