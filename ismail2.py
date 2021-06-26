@@ -375,31 +375,33 @@ def sorti():
             print(Av+" est dans la line"+str(table+1)+", pile "+str(p1[0][0])+", emplacement1")
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
             s2 = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            x = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            y = cur.fetchall()
+
             if s2:
                print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s2[0][0])+", emplacement1")
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em3[0][0])+"' where pile = '"+str(s2[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                con.commit()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
-            x = cur.fetchall()
-            if x:
+            elif x:
                if x[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em3[0][0])+"' where pile = '"+str(x[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
-            y = cur.fetchall()
-            if y:
+            elif y:
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-
+            else:
+               pass
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
             s3 = cur.fetchall()
             if s3:
@@ -428,7 +430,7 @@ def sorti():
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-                  return None 
+                  return None
 
 
          else:
