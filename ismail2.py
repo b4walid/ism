@@ -323,7 +323,7 @@ def sorti():
             if y:
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
-                  cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
+                  cur.execute("update line"+str(table+1)+" SET emplacement3='"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
@@ -360,7 +360,7 @@ def sorti():
             if y:
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
-                  cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
+                  cur.execute("update line"+str(table+1)+" SET emplacement3='"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0' emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
@@ -396,7 +396,7 @@ def sorti():
             elif y:
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
-                  cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
+                  cur.execute("update line"+str(table+1)+" SET emplacement3 = '"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
@@ -427,7 +427,7 @@ def sorti():
             elif y :
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3") 
-                  cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
+                  cur.execute("update line"+str(table+1)+" SET emplacement3 = '"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
