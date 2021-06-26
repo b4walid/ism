@@ -404,6 +404,11 @@ def sorti():
                pass
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
             s3 = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            x = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            y = cur.fetchall()
+
             if s3:
                print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s3[0][0])+", emplacement1")
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em2[0][0])+"' where pile = '"+str(s3[0][0])+"'")
@@ -411,9 +416,7 @@ def sorti():
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'") 
                con.commit()
                return None
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
-            x = cur.fetchall()
-            if x :
+            elif x :
                if x[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em2[0][0])+"' where pile = '"+str(x[0][0])+"'")
@@ -423,7 +426,7 @@ def sorti():
                   return None
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
             y = cur.fetchall()
-            if y :
+            elif y :
                if y[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3") 
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
@@ -431,6 +434,8 @@ def sorti():
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   return None
+            else:
+               pass
 
 
          else:
