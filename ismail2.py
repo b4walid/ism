@@ -246,7 +246,31 @@ def insert_stockage(names,dimension_conteneur):
 def sorti():
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visit = ['cx88','cont12']
+   list_visita = ['cx1119','cx32344','cx8989','cx777777783']
+   list_visit3 = []
+   list_visit2 = []
+   list_visit1 = []
+   for Av in list_visita:
+      for table in range(21):
+         cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em3 = cur.fetchall()
+         cur.execute("select emplacement2 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em2 = cur.fetchall()
+         cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
+         em1 = cur.fetchall()
+         if (Av,) in em3:
+            list_visit1.append(Av)
+            break
+         elif (Av,) in em2:
+            list_visit2.append(Av)
+            break
+         elif (Av,) in em1:
+            list_visit3.append(Av)
+            break
+         else:
+            pass
+   list_visit = list_visit1+list_visit2+list_visit3
+   print (list_visit)
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -366,7 +390,7 @@ def sorti():
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
                   cur.execute("update line"+str(table+1)+" SET emplacement3='"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
-                  cur.execute("update line"+str(table+1)+" SET emplacement1 = '0' emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
+                  cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
                   return None
 
