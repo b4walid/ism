@@ -51,7 +51,6 @@ def c_table():
 
 def insert_stockage(names,dimension_conteneur):
    c = [14,14,14,16,14,14,15,15,14,14,14,13,14,13,14,14,13,14,14,13,14]
-   distance = {"pile1":6,"pile2":12,"pile3":14}
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
    #dimension = 20
@@ -60,43 +59,43 @@ def insert_stockage(names,dimension_conteneur):
          dimension = [20,20,40,20,40,40,20,20,20,40,20,40,20,40]
       elif i == 1:
          dimension = [20,40,40,20,20,40,40,20,20,20,40,20,20,40]
-      elif i == 2: 
+      elif i == 2:
          dimension = [40,20,20,40,20,20,20,20,20,40,20,40,40,40]
-      elif i == 3: 
+      elif i == 3:
          dimension = [20,20,40,20,20,40,20,40,20,20,20,20,40,20,20,20]
-      elif i == 4: 
+      elif i == 4:
          dimension = [40,20,20,40,20,20,40,40,40,20,20,20,40,20]
-      elif i == 5: 
+      elif i == 5:
          dimension = [40,20,40,20,40,20,20,20,40,40,20,20,20,40]
-      elif i == 6: 
+      elif i == 6:
          dimension = [20,20,40,40,20,20,40,20,20,20,20,40,20,40,20]
-      elif i == 7: 
+      elif i == 7:
          dimension = [40,40,20,20,20,20,20,40,20,40,20,20,20,20,40]
-      elif i == 8: 
+      elif i == 8:
          dimension = [20,40,20,40,40,20,40,20,20,40,20,20,40,20]
-      elif i == 9: 
+      elif i == 9:
          dimension = [20,20,40,40,20,40,20,40,40,20,20,40,20,20]
-      elif i == 10: 
+      elif i == 10:
          dimension = [40,40,20,40,20,20,40,20,40,20,20,20,40,20]
-      elif i == 11: 
+      elif i == 11:
          dimension = [20,40,20,40,40,20,40,40,20,20,40,20,40]
-      elif i == 12: 
+      elif i == 12:
          dimension = [40,20,20,40,20,20,40,20,40,40,20,40,20,20]
-      elif i == 13: 
+      elif i == 13:
          dimension = [40,20,40,40,20,40,20,20,40,20,40,40,20]
-      elif i == 14: 
+      elif i == 14:
          dimension = [40,20,40,20,20,40,20,20,40,40,20,20,20,40]
-      elif i == 15: 
+      elif i == 15:
          dimension = [20,20,20,40,40,20,40,40,20,20,40,20,40,20]
-      elif i == 16: 
+      elif i == 16:
          dimension = [40,20,20,20,40,40,20,40,40,40,20,20,40]
-      elif i == 17: 
+      elif i == 17:
          dimension = [20,20,20,40,20,40,40,20,40,20,20,40,20,40]
-      elif i == 18: 
+      elif i == 18:
          dimension = [20,20,40,40,20,40,20,40,40,20,20,40,20,20]
-      elif i == 19: 
+      elif i == 19:
          dimension = [20,40,20,40,40,20,40,40,20,20,20,40,40]
-      elif i == 20: 
+      elif i == 20:
          dimension = [40,40,20,40,20,20,20,40,20,40,40,20,20,20]
       else:
          pass
@@ -117,56 +116,55 @@ def insert_stockage(names,dimension_conteneur):
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
               #con.close()
               return None
- 
+
         if ("0",) in data1:
            if dimension_conteneur == dimension[p]:
               cur.execute("UPDATE line"+str(i+1)+" SET emplacement1 = '"+names+"',emplacement2 = '0',emplacement3 = '0' where pile = "+str(p+1))
               con.commit()
-              return None
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
-
+              return None
    for i in range(21):
       if i == 0:
          dimension = [20,20,40,20,40,40,20,20,20,40,20,40,20,40]
       elif i == 1:
          dimension = [20,40,40,20,20,40,40,20,20,20,40,20,20,40]
-      elif i == 2: 
+      elif i == 2:
          dimension = [40,20,20,40,20,20,20,20,20,40,20,40,40,40]
-      elif i == 3: 
+      elif i == 3:
          dimension = [20,20,40,20,20,40,20,40,20,20,20,20,40,20,20,20]
-      elif i == 4: 
+      elif i == 4:
          dimension = [40,20,20,40,20,20,40,40,40,20,20,20,40,20]
-      elif i == 5: 
+      elif i == 5:
          dimension = [40,20,40,20,40,20,20,20,40,40,20,20,20,40]
-      elif i == 6: 
+      elif i == 6:
          dimension = [20,20,40,40,20,20,40,20,20,20,20,40,20,40,20]
-      elif i == 7: 
+      elif i == 7:
          dimension = [40,40,20,20,20,20,20,40,20,40,20,20,20,20,40]
-      elif i == 8: 
+      elif i == 8:
          dimension = [20,40,20,40,40,20,40,20,20,40,20,20,40,20]
-      elif i == 9: 
+      elif i == 9:
          dimension = [20,20,40,40,20,40,20,40,40,20,20,40,20,20]
-      elif i == 10: 
+      elif i == 10:
          dimension = [40,40,20,40,20,20,40,20,40,20,20,20,40,20]
-      elif i == 11: 
+      elif i == 11:
          dimension = [20,40,20,40,40,20,40,40,20,20,40,20,40]
-      elif i == 12: 
+      elif i == 12:
          dimension = [40,20,20,40,20,20,40,20,40,40,20,40,20,20]
-      elif i == 13: 
+      elif i == 13:
          dimension = [40,20,40,40,20,40,20,20,40,20,40,40,20]
-      elif i == 14: 
+      elif i == 14:
          dimension = [40,20,40,20,20,40,20,20,40,40,20,20,20,40]
-      elif i == 15: 
+      elif i == 15:
          dimension = [20,20,20,40,40,20,40,40,20,20,40,20,40,20]
-      elif i == 16: 
+      elif i == 16:
          dimension = [40,20,20,20,40,40,20,40,40,40,20,20,40]
-      elif i == 17: 
+      elif i == 17:
          dimension = [20,20,20,40,20,40,40,20,40,20,20,40,20,40]
-      elif i == 18: 
+      elif i == 18:
          dimension = [20,20,40,40,20,40,20,40,40,20,20,40,20,20]
-      elif i == 19: 
+      elif i == 19:
          dimension = [20,40,20,40,40,20,40,40,20,20,20,40,40]
-      elif i == 20: 
+      elif i == 20:
          dimension = [40,40,20,40,20,20,20,40,20,40,40,20,20,20]
       else:
          pass
@@ -528,4 +526,3 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
-         
