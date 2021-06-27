@@ -49,7 +49,7 @@ def c_table():
       con.close()
 
 
-def insert_stockage(names,dimension_conteneur):
+def insert_stockage(names,dimension_conteneur,list_visita):
    c = [14,14,14,16,14,14,15,15,14,14,14,13,14,13,14,14,13,14,14,13,14]
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
@@ -102,6 +102,7 @@ def insert_stockage(names,dimension_conteneur):
       for p in range(c[i]): #pile
         cur.execute("SELECT emplacement1 FROM line"+str(i+1)+" where pile = "+str(p+1))
         data1 = cur.fetchall()
+        #print (data1)
         #cur.execute("SELECT emplacement2 FROM line"+str(i+1)+" where pile = "+str(p+1))
         #data2 = cur.fetchall()
         #cur.execute("SELECT emplacement3 FROM line"+str(i+1)+" where pile = "+str(p+1))
@@ -172,10 +173,13 @@ def insert_stockage(names,dimension_conteneur):
       for p in range(c[i]):
          cur.execute("SELECT emplacement2 FROM line"+str(i+1)+" where pile = "+str(p+1))
          data2 = cur.fetchall()
+         #emplacement1 pour verifier est ce que dans la list des visits
+         cur.execute("select emlacement1 from line"+str(i+1)+" where pile = "+str(p+1))
+         empl1 = cur.fetchall()
          #cur.execute("SELECT emplacement3 FROM line"+str(i+1)+" where pile = "+str(p+1))
          #data3 = cur.fetchall()
          if ("0",) in data2:
-            if dimension_conteneur == dimension[p]:
+            if dimension_conteneur == dimension[p] and empl1[0][0] not in list_visita:
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement2 = '"+names+"' where pile = "+str(p+1))
                con.commit()
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, deuxieme emplacement")
@@ -227,10 +231,14 @@ def insert_stockage(names,dimension_conteneur):
          pass
 
       for p in range(c[i]):
-         cur.execute("SELECT emplacement3 FROM line"+str(i+1)+" where pile = "+str(p+1)) 
+         cur.execute("SELECT emplacement3 FROM line"+str(i+1)+" where pile = "+str(p+1))
          data3 = cur.fetchall()
+         cur.execute("select emplacement2 from line"+str(i+1)+" where pile = "+str(p+1))
+         empl2 = cur.fetchall()
+         cur.execute("select emplacement1 from line"+str(i+1)+" where pile = "+str(p+1))
+         empl1 = cur.fetchall()
          if ("0",) in data3:
-            if dimension_conteneur == dimension[p]:
+            if dimension_conteneur == dimension[p] and empl1[0][0] not in list_visita and empl2[0][0] not in list_vista:
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement3 = '"+names+"' where pile = "+str(p+1))
                con.commit()
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, troisieme emplacement")
@@ -241,10 +249,10 @@ def insert_stockage(names,dimension_conteneur):
 #column : parameter_vuln,url_vuln
 
 
-def sorti():
+def sorti(list_visita):
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visita = ['cx318']
+  # list_visita = ['cx318']
    list_visit3 = []
    list_visit2 = []
    list_visit1 = []
@@ -512,13 +520,14 @@ def all():
    Av= []
    l= []
    choix = input("Sort ou stock 1/2 : ")
+   list_visita = ['cx318','cx54121']
    if choix == "1":
-      sorti()
+      sorti(list_visita)
    elif choix == "2":
       names = input("Entrer le nom de conteneur : ")
       dimension_conteneur = int(input("Entrer la dimension de "+names+" : "))
       A0.append(names)
-      insert_stockage(names,dimension_conteneur)
+      insert_stockage(names,dimension_conteneur,list_visita)
    else:
       print("please entrer 1 ou 2")
       sys.exit()
