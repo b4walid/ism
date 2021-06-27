@@ -246,7 +246,7 @@ def insert_stockage(names,dimension_conteneur):
 def sorti():
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
-   list_visit = ['cx11','cont12']
+   list_visit = ['cx88','cont12']
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -299,7 +299,9 @@ def sorti():
             p = cur.fetchall()
             print(Av+ " not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
-            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p[0][0])+"'")
+            dim_p = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s = cur.fetchall()
             if s:
                print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s[0][0])+", emplacement1")
@@ -308,7 +310,7 @@ def sorti():
                cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                con.commit()
                return None
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             x = cur.fetchall()
             if x:
                if x[0][0] not in list_visit:
@@ -318,7 +320,7 @@ def sorti():
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
                   return None
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             y = cur.fetchall()
             if y:
                if y[0][0] not in list_visit:
@@ -335,7 +337,9 @@ def sorti():
             p = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
-            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p[0][0])+"'")
+            dim_p = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s1 = cur.fetchall()
             if s1:
                print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s1[0][0])+", emplacement1")
@@ -344,7 +348,7 @@ def sorti():
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0',emplacement3='0' where pile = '"+str(p[0][0])+"'")
                con.commit()
                return None
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             x = cur.fetchall()
             if x:
                if x[0][0] not in list_visit:
@@ -355,7 +359,7 @@ def sorti():
                   con.commit()
                   return None
 
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             y = cur.fetchall()
             if y:
                if y[0][0] not in list_visit:
@@ -373,11 +377,13 @@ def sorti():
             p1 = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line"+str(table+1)+", pile "+str(p1[0][0])+", emplacement1")
-            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p1[0][0])+"'")
+            dim_p = cur.fetchall()
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s2 = cur.fetchall()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             x = cur.fetchall()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             y = cur.fetchall()
 
             if s2:
@@ -402,11 +408,11 @@ def sorti():
                   con.commit()
             else:
                pass
-            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s3 = cur.fetchall()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             x = cur.fetchall()
-            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0'")
+            cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             y = cur.fetchall()
 
             if s3:
