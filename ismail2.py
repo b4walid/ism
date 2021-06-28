@@ -253,6 +253,9 @@ def sorti(list_visita):
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
   # list_visita = ['cx318']
+   list_visit6 = []
+   list_visit5 = []
+   list_visit4 = []
    list_visit3 = []
    list_visit2 = []
    list_visit1 = []
@@ -264,18 +267,27 @@ def sorti(list_visita):
          em2 = cur.fetchall()
          cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
          em1 = cur.fetchall()
-         if (Av,) in em3:
+         if (Av,) in em1 and ("0",) in em2 and ("0",) in em3:
             list_visit1.append(Av)
             break
-         elif (Av,) in em2:
+         elif (Av,) in em2 and ("0",) in em3:
             list_visit2.append(Av)
             break
-         elif (Av,) in em1:
+         elif (Av,) in em3:
             list_visit3.append(Av)
+            break
+         elif (Av,) in em1 and ("0",) not in em2 and ("0",) in em3:
+            list_visit4.append(Av)
+            break
+         elif (Av,) in em2 and ("0",) not in em3::
+            list_visit5.append(Av)
+            break
+         elif (Av,) in em1 and ("0",) not in em2 and ("0",) not in em3:
+            list_visit6.append(Av)
             break
          else:
             pass
-   list_visit = list_visit1+list_visit2+list_visit3
+   list_visit = list_visit1+list_visit2+list_visit3+list_visit4+list_visit5+list_visit6
    print (list_visit)
    for Av in list_visit:
       for table in range(21):
@@ -371,11 +383,8 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
                   return None
-               else:
-                  continue
 
          elif (Av,) in em1 and em2 != ("0",) and ("0",) in em3:
-            print("zoba")
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+" not sommet")
@@ -406,8 +415,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
                   return None
-               else:
-                  continue
+
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"' ")
             y = cur.fetchall()
 
@@ -425,8 +433,6 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
                   return None
-               else:
-                  continue
 
 #            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
 #            con.commit()
@@ -459,8 +465,8 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-               else:
-                  continue
+
+
             elif y:
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(y[0][0])+"'")
                emp2 = cur.fetchall()
@@ -472,8 +478,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-               else:
-                  continue
+
             else:
                pass
 
@@ -551,3 +556,4 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
+       
