@@ -2,6 +2,19 @@
 
 import psycopg2
 import sys
+from datetime import date
+from datetime import datetime
+
+def dates():
+   datex = date.today()
+   d = datex.strftime("%d-%m-%Y")+".txt"
+   return d
+
+def times():
+   now = datetime.now()
+   tim = now.strftime("%H:%M:%S")
+   return tim
+
 def check_database():
    con = psycopg2.connect(user='postgres',password='postgres') #connect to database postgres
    con.autocommit = True
@@ -115,7 +128,9 @@ def insert_stockage(names,dimension_conteneur,list_visita):
               cur.execute("INSERT INTO line"+str(i+1)+" VALUES('"+str(p+1)+"','"+str(dimension[p])+"','"+str(dimension_conteneur)+"','"+str(emplacement1)+"','"+str(emplacement2)+"','"+str(emplacement3)+"')")
               con.commit()
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
-              #con.close()
+              with open(dates(),"a") as folder:
+                 folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
+                 folder.close()
               return None
 
         if ("0",) in data1:
@@ -123,6 +138,9 @@ def insert_stockage(names,dimension_conteneur,list_visita):
               cur.execute("UPDATE line"+str(i+1)+" SET emplacement1 = '"+names+"',emplacement2 = '0',emplacement3 = '0' where pile = "+str(p+1))
               con.commit()
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
+              with open(dates(),"a") as folder:
+                 folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement\n")
+                 folder.close()
               return None
    for i in range(21):
       if i == 0:
@@ -183,6 +201,9 @@ def insert_stockage(names,dimension_conteneur,list_visita):
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement2 = '"+names+"' where pile = "+str(p+1))
                con.commit()
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, deuxieme emplacement")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, deuxieme emplacement\n")
+                  folder.close()
                return None
    for i in range(21):
       if i == 0:
@@ -242,6 +263,9 @@ def insert_stockage(names,dimension_conteneur,list_visita):
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement3 = '"+names+"' where pile = "+str(p+1))
                con.commit()
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, troisieme emplacement")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, troisieme emplacement\n")
+                  folder.close()
                return None
 #table : url_info
 #column : main_site,parameter
@@ -279,7 +303,7 @@ def sorti(list_visita):
          elif (Av,) in em1 and ("0",) not in em2 and ("0",) in em3:
             list_visit4.append(Av)
             break
-         elif (Av,) in em2 and ("0",) not in em3::
+         elif (Av,) in em2 and ("0",) not in em3:
             list_visit5.append(Av)
             break
          elif (Av,) in em1 and ("0",) not in em2 and ("0",) not in em3:
@@ -288,7 +312,7 @@ def sorti(list_visita):
          else:
             pass
    list_visit = list_visit1+list_visit2+list_visit3+list_visit4+list_visit5+list_visit6
-   print (list_visit)
+   #print (list_visit)
    for Av in list_visit:
       for table in range(21):
          cur.execute("select emplacement3 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
@@ -297,15 +321,15 @@ def sorti(list_visita):
          em2 = cur.fetchall()
          cur.execute("select emplacement1 from line"+str(table+1)+" where emplacement1 = '"+Av+"' or emplacement2 = '"+Av+"' or emplacement3 = '"+Av+"'")
          em1 = cur.fetchall()
-         #print(str(em1)+'zooba')
-         #cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '"+Av+"')
-         #p = cur.fetchall()
-         #print(str(em3)+"and "+str(em2)+" and"+str(em1))
+
          if (Av,) in em3:
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '"+Av+"'")
             p = cur.fetchall()
             print(Av+" est un sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement3")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+"]"+Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement3\n")
+               folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement3='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
             return None
@@ -314,6 +338,9 @@ def sorti(list_visita):
             p = cur.fetchall()
             print(Av+" est un sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2\n")
+               folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
             return None
@@ -322,6 +349,9 @@ def sorti(list_visita):
             p = cur.fetchall()
             print(Av+" est un sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1\n")
+               folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
             return None
@@ -341,12 +371,18 @@ def sorti(list_visita):
             p = cur.fetchall()
             print(Av+ " not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+"]"+Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement2\n")
+               folder.close()
             cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p[0][0])+"'")
             dim_p = cur.fetchall()
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s = cur.fetchall()
             if s:
                print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s[0][0])+", emplacement1")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"]"+" deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s[0][0])+", emplacement1\n")
+                  folder.close()
                cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em3[0][0])+"' where pile = '"+str(s[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
@@ -361,6 +397,9 @@ def sorti(list_visita):
 
                if emp1[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em3[0][0])+"' where pile = '"+str(x[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
@@ -378,6 +417,9 @@ def sorti(list_visita):
                emp3 = cur.fetchall()
                if emp2[0][0] not in list_visit and emp3[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement3='"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
@@ -389,12 +431,18 @@ def sorti(list_visita):
             p = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+"]"+Av+" est dans la line "+str(table+1)+", pile "+str(p[0][0])+", emplacement1\n")
+               folder.close()
             cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p[0][0])+"'")
             dim_p = cur.fetchall()
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
             s1 = cur.fetchall()
             if s1:
                print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s1[0][0])+", emplacement1")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"]"+" deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s1[0][0])+", emplacement1\n")
+                  folder.close()
                cur.execute("update line"+str(table+1)+" SET emplacement1='"+str(em2[0][0])+"' where pile = '"+str(s1[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0',emplacement3='0' where pile = '"+str(p[0][0])+"'")
@@ -410,6 +458,9 @@ def sorti(list_visita):
 
                if emp1[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='"+str(em2[0][0])+"' where pile = '"+str(x[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
@@ -428,6 +479,9 @@ def sorti(list_visita):
                #print(emp3)
                if emp2[0][0] not in list_visit and emp3[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement3='"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
@@ -441,6 +495,9 @@ def sorti(list_visita):
             p1 = cur.fetchall()
             print(Av+" not sommet")
             print(Av+" est dans la line"+str(table+1)+", pile "+str(p1[0][0])+", emplacement1")
+            with open(dates(),"a") as folder:
+               folder.write("["+times()+"]"+Av+" est dans la line"+str(table+1)+", pile "+str(p1[0][0])+", emplacement1\n")
+               folder.close()
             cur.execute("select dimension_conteneur from line"+str(table+1)+" where pile = '"+str(p1[0][0])+"'")
             dim_p = cur.fetchall()
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '0' and dimension = '"+str(dim_p[0][0])+"'")
@@ -452,6 +509,9 @@ def sorti(list_visita):
 
             if s2:
                print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s2[0][0])+", emplacement1")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"] "+"deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(s2[0][0])+", emplacement1\n")
+                  folder.close()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em3[0][0])+"' where pile = '"+str(s2[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
@@ -461,6 +521,9 @@ def sorti(list_visita):
                emp1 = cur.fetchall()
                if emp1[0][0] not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em3[0][0])+"' where pile = '"+str(x[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
@@ -474,6 +537,9 @@ def sorti(list_visita):
                emp3 = cur.fetchall()
                if emp2[0][0] not in list_visit and emp3 not in list_visit:
                   print("deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"]"+" deplacer "+str(em3[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '"+str(em3[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
@@ -490,6 +556,9 @@ def sorti(list_visita):
             y = cur.fetchall()
             if s3:
                print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s3[0][0])+", emplacement1")
+               with open(dates(),"a") as folder:
+                  folder.write("["+times()+"]"+" deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(s3[0][0])+", emplacement1\n")
+                  folder.close()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '"+str(em2[0][0])+"' where pile = '"+str(s3[0][0])+"'")
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'") 
@@ -501,6 +570,9 @@ def sorti(list_visita):
 
                if x[0][0] not in list_visit:
                   print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"] "+"deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(x[0][0])+", emplacement2\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement2 = '"+str(em2[0][0])+"' where pile = '"+str(x[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
@@ -515,7 +587,10 @@ def sorti(list_visita):
                emp3 = cur.fetchall()
 
                if y[0][0] not in list_visit:
-                  print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3") 
+                  print("deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3")
+                  with open(dates(),"a") as folder:
+                     folder.write("["+times()+"] "+"deplacer "+str(em2[0][0])+" vers line"+str(table+1)+", pile "+str(y[0][0])+", emplacement3\n")
+                     folder.close()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '"+str(em2[0][0])+"' where pile = '"+str(y[0][0])+"'")
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
@@ -556,4 +631,3 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
-       
