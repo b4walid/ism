@@ -4,6 +4,7 @@ import psycopg2
 import sys
 from datetime import date
 from datetime import datetime
+from random import randrange
 
 def dates():
    datex = date.today()
@@ -63,6 +64,7 @@ def c_table():
 
 
 def insert_stockage(names,dimension_conteneur,list_visita):
+   global count
    c = [14,14,14,16,14,14,15,15,14,14,14,13,14,13,14,14,13,14,14,13,14]
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
@@ -127,9 +129,10 @@ def insert_stockage(names,dimension_conteneur,list_visita):
               emplacement3 = "0"
               cur.execute("INSERT INTO line"+str(i+1)+" VALUES('"+str(p+1)+"','"+str(dimension[p])+"','"+str(dimension_conteneur)+"','"+str(emplacement1)+"','"+str(emplacement2)+"','"+str(emplacement3)+"')")
               con.commit()
+              count += 1
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
               with open(dates(),"a") as folder:
-                 folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
+                 folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement\n")
                  folder.close()
               return None
 
@@ -137,6 +140,7 @@ def insert_stockage(names,dimension_conteneur,list_visita):
            if dimension_conteneur == dimension[p]:
               cur.execute("UPDATE line"+str(i+1)+" SET emplacement1 = '"+names+"',emplacement2 = '0',emplacement3 = '0' where pile = "+str(p+1))
               con.commit()
+              count += 1
               print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement")
               with open(dates(),"a") as folder:
                  folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, premier emplacement\n")
@@ -192,7 +196,7 @@ def insert_stockage(names,dimension_conteneur,list_visita):
          cur.execute("SELECT emplacement2 FROM line"+str(i+1)+" where pile = "+str(p+1))
          data2 = cur.fetchall()
          #emplacement1 pour verifier est ce que dans la list des visits
-         cur.execute("select emlacement1 from line"+str(i+1)+" where pile = "+str(p+1))
+         cur.execute("select emplacement1 from line"+str(i+1)+" where pile = "+str(p+1))
          empl1 = cur.fetchall()
          #cur.execute("SELECT emplacement3 FROM line"+str(i+1)+" where pile = "+str(p+1))
          #data3 = cur.fetchall()
@@ -200,6 +204,7 @@ def insert_stockage(names,dimension_conteneur,list_visita):
             if dimension_conteneur == dimension[p] and empl1[0][0] not in list_visita:
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement2 = '"+names+"' where pile = "+str(p+1))
                con.commit()
+               count += 1
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, deuxieme emplacement")
                with open(dates(),"a") as folder:
                   folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, deuxieme emplacement\n")
@@ -259,14 +264,16 @@ def insert_stockage(names,dimension_conteneur,list_visita):
          cur.execute("select emplacement1 from line"+str(i+1)+" where pile = "+str(p+1))
          empl1 = cur.fetchall()
          if ("0",) in data3:
-            if dimension_conteneur == dimension[p] and empl1[0][0] not in list_visita and empl2[0][0] not in list_vista:
+            if dimension_conteneur == dimension[p] and empl1[0][0] not in list_visita and empl2[0][0] not in list_visita:
                cur.execute("UPDATE line"+str(i+1)+" SET emplacement3 = '"+names+"' where pile = "+str(p+1))
                con.commit()
+               count += 1
                print (names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, troisieme emplacement")
                with open(dates(),"a") as folder:
                   folder.write("["+times()+"]"+names+" est dans la "+str(i+1)+" line, "+str(p+1)+" pile, troisieme emplacement\n")
                   folder.close()
                return None
+
 #table : url_info
 #column : main_site,parameter
 #table : vuln
@@ -274,6 +281,8 @@ def insert_stockage(names,dimension_conteneur,list_visita):
 
 
 def sorti(list_visita):
+   global count_s
+   global count_d
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
    cur = con.cursor()
   # list_visita = ['cx318']
@@ -332,6 +341,7 @@ def sorti(list_visita):
                folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement3='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
+            count_s += 2
             return None
          elif (Av,) in em2 and ("0",) in em3:
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '"+Av+"'")
@@ -343,6 +353,7 @@ def sorti(list_visita):
                folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement2='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
+            count_s += 2
             return None
          elif (Av,) in em1 and ("0",) in em2:
             cur.execute("select pile from line"+str(table+1)+" where emplacement1 = '"+Av+"'")
@@ -354,6 +365,7 @@ def sorti(list_visita):
                folder.close()
             cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
             con.commit()
+            count_s += 2
             return None
          else:
             pass
@@ -387,6 +399,7 @@ def sorti(list_visita):
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                con.commit()
+               count_d += 0.6
                return None
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"'")
             x = cur.fetchall()
@@ -404,9 +417,9 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
-               else:
-                  continue
+
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement2 not like '"+Av+"'")
             y = cur.fetchall()
 
@@ -424,6 +437,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
 
          elif (Av,) in em1 and em2 != ("0",) and ("0",) in em3:
@@ -447,6 +461,7 @@ def sorti(list_visita):
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0',emplacement3='0' where pile = '"+str(p[0][0])+"'")
                con.commit()
+               count_d += 0.6
                return None
             #select un pile vide 
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"'")
@@ -465,6 +480,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
 
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"' ")
@@ -486,6 +502,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
 
 #            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
@@ -516,6 +533,7 @@ def sorti(list_visita):
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                con.commit()
+               count_d += 0.6
             elif x:
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(x[0][0])+"'") 
                emp1 = cur.fetchall()
@@ -528,7 +546,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
-
+                  count_d += 0.6
 
             elif y:
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(y[0][0])+"'")
@@ -544,6 +562,7 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
 
             else:
                pass
@@ -563,6 +582,7 @@ def sorti(list_visita):
                con.commit()
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'") 
                con.commit()
+               count_d += 0.6
                return None
             elif x :
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(x[0][0])+"'")
@@ -577,9 +597,9 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
-               else:
-                  continue
+
             elif y :
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(y[0][0])+"'")
                emp2 = cur.fetchall()
@@ -595,9 +615,8 @@ def sorti(list_visita):
                   con.commit()
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
+                  count_d += 0.6
                   return None
-               else:
-                  continue
             else:
                pass
 
@@ -608,6 +627,9 @@ def sorti(list_visita):
 
 
 def all():
+   global count
+   global count_s
+   global count_d
    j=0
    i=0
    k=0
@@ -615,18 +637,43 @@ def all():
    A0 = []
    Av= []
    l= []
-   choix = input("Sort ou stock 1/2 : ")
-   list_visita = ['cx318','cx54121']
-   if choix == "1":
-      sorti(list_visita)
-   elif choix == "2":
-      names = input("Entrer le nom de conteneur : ")
-      dimension_conteneur = int(input("Entrer la dimension de "+names+" : "))
-      A0.append(names)
-      insert_stockage(names,dimension_conteneur,list_visita)
+   count = 0
+   count_s = 0
+   count_d = 0
+   list_visita = ['cx23','cx87','ct1398','ct1399','ct1394']
+   choix = randrange(2)
+   if choix == 0:
+      file = input("entrer le fichier qui contient les conteneur pour le destockage : ")
+      with open(file ,"r") as r:
+         for line in r.readlines():
+            line = line.strip()
+            sorti(list_visita)
+      print ("le desockage prit "+str(count_s)+" min")
+      print ("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
+      with open(dates(),"a") as folder:
+         folder.write("le desockage prit "+str(count_s)+" min\n")
+         folder.write("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
+         folder.close()
+
+   elif choix == 1:
+      file = input("entrer le fichier qui contient les conteneurs et les dimensions pour le stockage:")
+      with open(file,"r") as r:
+         for line in r.readlines():
+            line = line.strip()
+            names = line.split(',')[0]
+            dimension_conteneur = int(line.split(',')[1])
+            insert_stockage(names,dimension_conteneur,list_visita)
+      print ("le stockage prit "+str(count)+" min")
+      with open(dates(),"a") as folder:
+         folder.write("le stockage prit "+str(count)+" min\n")
+         folder.close()
+
+      #names = input("Entrer le nom de conteneur : ")
+      #dimension_conteneur = int(input("Entrer la dimension de "+names+" : "))
+      #A0.append(names)
+      #insert_stockage(names,dimension_conteneur,list_visita)
    else:
-      print("please entrer 1 ou 2")
-      sys.exit()
+      pass
 
 if __name__ == "__main__":
    check_database()
