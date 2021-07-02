@@ -406,6 +406,7 @@ def sorti(list_visita):
                cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                con.commit()
                count_d += 0.6
+               count_s += 2
                return None
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"'")
             x = cur.fetchall()
@@ -424,6 +425,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
 
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement2 not like '"+Av+"'")
@@ -444,6 +446,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement2='0',emplacement3='0' where pile ='"+str(p[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
 
          elif (Av,) in em1 and em2 != ("0",) and ("0",) in em3:
@@ -468,6 +471,7 @@ def sorti(list_visita):
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0',emplacement3='0' where pile = '"+str(p[0][0])+"'")
                con.commit()
                count_d += 0.6
+               count_s += 2
                return None
             #select un pile vide 
             cur.execute("select pile from line"+str(table+1)+" where emplacement2 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"'")
@@ -487,6 +491,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
 
             cur.execute("select pile from line"+str(table+1)+" where emplacement3 = '0' and dimension = '"+str(dim_p[0][0])+"' and emplacement1 not like '"+Av+"' ")
@@ -509,6 +514,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 ='0', emplacement3 = '0' where pile = '"+str(p[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
 
 #            cur.execute("update line"+str(table+1)+" SET emplacement1='0' where pile ='"+str(p[0][0])+"'")
@@ -540,6 +546,7 @@ def sorti(list_visita):
                cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                con.commit()
                count_d += 0.6
+               count_s += 2
             elif x:
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(x[0][0])+"'") 
                emp1 = cur.fetchall()
@@ -553,6 +560,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s +=2
 
             elif y:
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(y[0][0])+"'")
@@ -569,6 +577,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement3 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
 
             else:
                pass
@@ -589,6 +598,7 @@ def sorti(list_visita):
                cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'") 
                con.commit()
                count_d += 0.6
+               count_s += 2
                return None
             elif x :
                cur.execute("select emplacement1 from line"+str(table+1)+" where pile = '"+str(x[0][0])+"'")
@@ -604,6 +614,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
 
             elif y :
@@ -622,6 +633,7 @@ def sorti(list_visita):
                   cur.execute("update line"+str(table+1)+" SET emplacement1 = '0', emplacement2 = '0' where pile = '"+str(p1[0][0])+"'")
                   con.commit()
                   count_d += 0.6
+                  count_s += 2
                   return None
             else:
                pass
