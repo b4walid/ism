@@ -683,11 +683,10 @@ def all():
       elif choix == 1:
          with open(file,"r") as r:
             lines = r.readlines()
-            for line in lines:
-               line = line.strip('\n')
             r.close()
-            names = line.split(',')[0]
-            dimension_conteneur = int(line.split(',')[1])
+            names = lines[0].strip('\n').split(',')[0]
+            print (names)
+            dimension_conteneur = int(lines[0].strip('\n').split(',')[1])
             insert_stockage(names,dimension_conteneur,list_visita)
             del lines[0]
             n = open(file, "w+")
@@ -714,3 +713,4 @@ def all():
 if __name__ == "__main__":
    check_database()
    all()
+         
