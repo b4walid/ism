@@ -281,6 +281,7 @@ def insert_stockage(names,dimension_conteneur,list_visita):
 
 
 def sorti(list_visita):
+   global sort
    global count_s
    global count_d
    con = psycopg2.connect(database='zone_de_stockage',user='postgres',password='postgres') #connect to database postgr>
@@ -320,7 +321,12 @@ def sorti(list_visita):
             break
          else:
             pass
-   list_visit = list_visit1+list_visit2+list_visit3+list_visit4+list_visit5+list_visit6
+   list_visit = ['ds']+list_visit1+list_visit2+list_visit3+list_visit4+list_visit5+list_visit6
+   del list_visit[0]
+   n = open(sort,"w+")
+   for line in list_visit:
+      n.write(line+'\n')
+   n.close()
    #print (list_visit)
    for Av in list_visit:
       for table in range(21):
@@ -627,6 +633,7 @@ def sorti(list_visita):
 
 
 def all():
+   global sort
    global count
    global count_s
    global count_d
@@ -637,43 +644,60 @@ def all():
    A0 = []
    Av= []
    l= []
+   list_visit = []
+   list_visita = []
    count = 0
    count_s = 0
    count_d = 0
-   list_visita = ['cx23','cx87','ct1398','ct1399','ct1394']
-   choix = randrange(2)
-   if choix == 0:
-      file = input("entrer le fichier qui contient les conteneur pour le destockage : ")
-      with open(file ,"r") as r:
-         for line in r.readlines():
-            line = line.strip()
-            sorti(list_visita)
-      print ("le desockage prit "+str(count_s)+" min")
-      print ("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
-      with open(dates(),"a") as folder:
-         folder.write("le desockage prit "+str(count_s)+" min\n")
-         folder.write("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
-         folder.close()
+   #list_visita = ['cx23','cx87','ct1398','ct1399','ct1394']
+   file = input("entrer le fichier qui contient les conteneurs et les dimensions pour le stockage:")
+   sort = input("entrer la list de destockage : ")
+   with open (sort,"r") as l:
+      linex = l.readlines()
+   for line in linex:
+      list_visit.append(line.strip('\n'))
+   #print (list_visit)
+   while 1:
+      choix = randrange(2)
+      if choix == 0:
+         with open (sort,"r") as r:
+            lines = r.readlines()
+            for line in lines:
+               line = line.strip('\n')
+               list_visita.append(line)
+            r.close()
+         sorti(list_visita)
 
-   elif choix == 1:
-      file = input("entrer le fichier qui contient les conteneurs et les dimensions pour le stockage:")
-      with open(file,"r") as r:
-         for line in r.readlines():
-            line = line.strip()
+      elif choix == 1:
+         with open(file,"r") as r:
+            lines = r.readlines()
+            for line in lines:
+               line = line.strip('\n')
+            r.close()
             names = line.split(',')[0]
             dimension_conteneur = int(line.split(',')[1])
             insert_stockage(names,dimension_conteneur,list_visita)
-      print ("le stockage prit "+str(count)+" min")
-      with open(dates(),"a") as folder:
-         folder.write("le stockage prit "+str(count)+" min\n")
-         folder.close()
+            del lines[0]
+            n = open(file, "w+")
+            for line in lines:
+               n.write(line)
+            n.close()
+         if len(lines) == 0:
+            print ("le stockage prit "+str(count)+" min")
+            with open(dates(),"a") as folder:
+               folder.write("le stockage prit "+str(count)+" min\n")
+               folder.close()
+            print ("le desockage prit "+str(count_s)+" min")
+            print ("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
+            with open(dates(),"a") as folder:
+               folder.write("le desockage prit "+str(count_s)+" min\n")
+               folder.write("le deplacement des conteneurs ils ont pris "+str(count_d)+" min\n")
+               folder.close()
+            break
 
-      #names = input("Entrer le nom de conteneur : ")
-      #dimension_conteneur = int(input("Entrer la dimension de "+names+" : "))
-      #A0.append(names)
-      #insert_stockage(names,dimension_conteneur,list_visita)
-   else:
-      pass
+      else:
+         pass
+
 
 if __name__ == "__main__":
    check_database()
