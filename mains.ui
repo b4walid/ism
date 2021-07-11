@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Port</string>
+   <string>Zone De Stockage</string>
   </property>
   <widget class="QComboBox" name="comboBox">
    <property name="geometry">
@@ -30,11 +30,6 @@
    <item>
     <property name="text">
      <string>40</string>
-    </property>
-   </item>
-   <item>
-    <property name="text">
-     <string/>
     </property>
    </item>
   </widget>
@@ -94,7 +89,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Deplacer</string>
+    <string>Retirer</string>
    </property>
   </widget>
   <widget class="QTableWidget" name="tableWidget">
@@ -106,6 +101,9 @@
      <height>381</height>
     </rect>
    </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>224</number>
+   </attribute>
    <column>
     <property name="text">
      <string>Conteneur</string>
@@ -126,6 +124,9 @@
      <height>361</height>
     </rect>
    </property>
+   <attribute name="horizontalHeaderDefaultSectionSize">
+    <number>255</number>
+   </attribute>
    <column>
     <property name="text">
      <string>List Visité</string>
@@ -142,7 +143,20 @@
     </rect>
    </property>
    <property name="text">
-    <string>Clear</string>
+    <string>Vider</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5">
+   <property name="geometry">
+    <rect>
+     <x>200</x>
+     <y>560</y>
+     <width>100</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Vider</string>
    </property>
   </widget>
  </widget>
