@@ -30,6 +30,7 @@ class main(QWidget,FORM_CLASS):
       self.pushButton_2.clicked.connect(self.addvs)
       self.pushButton_3.clicked.connect(self.depl)
       self.pushButton_4.clicked.connect(self.clr)
+      self.pushButton_5.clicked.connect(self.clrst)
       self.check_database()
       self.c_table()
 
@@ -177,8 +178,9 @@ class main(QWidget,FORM_CLASS):
                            dimension[p]) + "','" + str(dimension_conteneur) + "','" + str(emplacement1) + "','" + str(
                            emplacement2) + "','" + str(emplacement3) + "')")
                        con.commit()
-                       print(
+                       self.showdialog(
                            names + " est dans la " + str(i + 1) + " line, " + str(p + 1) + " pile, premier emplacement")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + names + " est dans la " + str(i + 1) + " line, " + str(
                                p + 1) + " pile, premier emplacement")
@@ -191,8 +193,9 @@ class main(QWidget,FORM_CLASS):
                            i + 1) + " SET emplacement1 = '" + names + "',emplacement2 = '0',emplacement3 = '0' where pile = " + str(
                            p + 1))
                        con.commit()
-                       print(
+                       self.showdialog(
                            names + " est dans la " + str(i + 1) + " line, " + str(p + 1) + " pile, premier emplacement")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + names + " est dans la " + str(i + 1) + " line, " + str(
                                p + 1) + " pile, premier emplacement\n")
@@ -258,8 +261,9 @@ class main(QWidget,FORM_CLASS):
                            "UPDATE line" + str(i + 1) + " SET emplacement2 = '" + names + "' where pile = " + str(
                                p + 1))
                        con.commit()
-                       print(names + " est dans la " + str(i + 1) + " line, " + str(
+                       self.showdialog(names + " est dans la " + str(i + 1) + " line, " + str(
                            p + 1) + " pile, deuxieme emplacement")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + names + " est dans la " + str(i + 1) + " line, " + str(
                                p + 1) + " pile, deuxieme emplacement\n")
@@ -325,8 +329,9 @@ class main(QWidget,FORM_CLASS):
                            "UPDATE line" + str(i + 1) + " SET emplacement3 = '" + names + "' where pile = " + str(
                                p + 1))
                        con.commit()
-                       print(names + " est dans la " + str(i + 1) + " line, " + str(
+                       self.showdialog(names + " est dans la " + str(i + 1) + " line, " + str(
                            p + 1) + " pile, troisieme emplacement")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + names + " est dans la " + str(i + 1) + " line, " + str(
                                p + 1) + " pile, troisieme emplacement\n")
@@ -400,8 +405,8 @@ class main(QWidget,FORM_CLASS):
                if (Av,) in em3:
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement3 = '" + Av + "'")
                    p = cur.fetchall()
-                   print(Av + " est un sommet")
-                   print(Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement3")
+                   self.showdialog(Av + " est un sommet ,"+Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement3")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + "]" + Av + " est dans la line " + str(table + 1) + ", pile " + str(
                            p[0][0]) + ", emplacement3\n")
@@ -411,14 +416,15 @@ class main(QWidget,FORM_CLASS):
                    con.commit()
                    #self.tableWidget_2.removeRow(d[Av])
                    self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                   del list_visit[0]
+                   if list_visit:
+                      del list_visit[0]
 
                    return None
                elif (Av,) in em2 and ("0",) in em3:
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement2 = '" + Av + "'")
                    p = cur.fetchall()
-                   print(Av + " est un sommet")
-                   print(Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement2")
+                   self.showdialog(Av + " est un sommet ,"+Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement2")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + Av + " est dans la line " + str(table + 1) + ", pile " + str(
                            p[0][0]) + ", emplacement2\n")
@@ -432,8 +438,8 @@ class main(QWidget,FORM_CLASS):
                elif (Av,) in em1 and ("0",) in em2:
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement1 = '" + Av + "'")
                    p = cur.fetchall()
-                   print(Av + " est un sommet")
-                   print(Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement1")
+                   self.showdialog(Av + " est un sommet ,"+Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement1")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + Av + " est dans la line " + str(table + 1) + ", pile " + str(
                            p[0][0]) + ", emplacement1\n")
@@ -442,7 +448,8 @@ class main(QWidget,FORM_CLASS):
                        "update line" + str(table + 1) + " SET emplacement1='0' where pile ='" + str(p[0][0]) + "'")
                    con.commit()
                    self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                   del list_visit[0]
+                   if list_visit:
+                      del list_visit[0]
 
                    return None
                else:
@@ -462,8 +469,8 @@ class main(QWidget,FORM_CLASS):
                if (Av,) in em2 and em3 != ("0",):
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement2 = '" + Av + "'")
                    p = cur.fetchall()
-                   print(Av + " not sommet")
-                   print(Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement2")
+                   self.showdialog(Av + " not sommet ,"+Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement2")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + "]" + Av + " est dans la line " + str(table + 1) + ", pile " + str(
                            p[0][0]) + ", emplacement2\n")
@@ -476,8 +483,9 @@ class main(QWidget,FORM_CLASS):
                            dim_p[0][0]) + "'")
                    s = cur.fetchall()
                    if s:
-                       print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                       self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                            s[0][0]) + ", emplacement1")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + " deplacer " + str(em3[0][0]) + " vers line" + str(
                                table + 1) + ", pile " + str(s[0][0]) + ", emplacement1\n")
@@ -489,7 +497,8 @@ class main(QWidget,FORM_CLASS):
                            table + 1) + " SET emplacement2='0',emplacement3='0' where pile ='" + str(p[0][0]) + "'")
                        con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
                        return None
                    cur.execute(
                        "select pile from line" + str(table + 1) + " where emplacement2 = '0' and dimension = '" + str(
@@ -502,8 +511,9 @@ class main(QWidget,FORM_CLASS):
                        emp1 = cur.fetchall()
 
                        if emp1[0][0] not in list_visit:
-                           print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                x[0][0]) + ", emplacement2")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em3[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(x[0][0]) + ", emplacement2\n")
@@ -515,7 +525,8 @@ class main(QWidget,FORM_CLASS):
                                table + 1) + " SET emplacement2='0',emplacement3='0' where pile ='" + str(p[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
@@ -532,8 +543,9 @@ class main(QWidget,FORM_CLASS):
                            "select emplacement2 from line" + str(table + 1) + " where pile = '" + str(y[0][0]) + "'")
                        emp3 = cur.fetchall()
                        if emp2[0][0] not in list_visit and emp3[0][0] not in list_visit:
-                           print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                y[0][0]) + ", emplacement3")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em3[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(y[0][0]) + ", emplacement3\n")
@@ -545,15 +557,16 @@ class main(QWidget,FORM_CLASS):
                                table + 1) + " SET emplacement2='0',emplacement3='0' where pile ='" + str(p[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
                elif (Av,) in em1 and em2 != ("0",) and ("0",) in em3:
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement1 = '" + Av + "'")
                    p = cur.fetchall()
-                   print(Av + " not sommet")
-                   print(Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement1")
+                   self.showdialog(Av + " not sommet, "+Av + " est dans la line " + str(table + 1) + ", pile " + str(p[0][0]) + ", emplacement1")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + "]" + Av + " est dans la line " + str(table + 1) + ", pile " + str(
                            p[0][0]) + ", emplacement1\n")
@@ -566,8 +579,9 @@ class main(QWidget,FORM_CLASS):
                            dim_p[0][0]) + "'")
                    s1 = cur.fetchall()
                    if s1:
-                       print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                       self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                            s1[0][0]) + ", emplacement1")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + " deplacer " + str(em2[0][0]) + " vers line" + str(
                                table + 1) + ", pile " + str(s1[0][0]) + ", emplacement1\n")
@@ -580,7 +594,8 @@ class main(QWidget,FORM_CLASS):
                            p[0][0]) + "'")
                        con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
 
                        return None
                    # select un pile vide
@@ -595,8 +610,9 @@ class main(QWidget,FORM_CLASS):
                        emp1 = cur.fetchall()
 
                        if emp1[0][0] not in list_visit:
-                           print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                x[0][0]) + ", emplacement2")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em2[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(x[0][0]) + ", emplacement2\n")
@@ -609,7 +625,8 @@ class main(QWidget,FORM_CLASS):
                                p[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
@@ -628,8 +645,9 @@ class main(QWidget,FORM_CLASS):
                        emp3 = cur.fetchall()
                        # print(emp3)
                        if emp2[0][0] not in list_visit and emp3[0][0] not in list_visit:
-                           print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                y[0][0]) + ", emplacement3")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em2[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(y[0][0]) + ", emplacement3\n")
@@ -642,7 +660,8 @@ class main(QWidget,FORM_CLASS):
                                p[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
@@ -651,8 +670,8 @@ class main(QWidget,FORM_CLASS):
                elif (Av,) in em1 and em2 != ("0",) and em3 != ("0"):
                    cur.execute("select pile from line" + str(table + 1) + " where emplacement1 = '" + Av + "'")
                    p1 = cur.fetchall()
-                   print(Av + " not sommet")
-                   print(Av + " est dans la line" + str(table + 1) + ", pile " + str(p1[0][0]) + ", emplacement1")
+                   self.showdialog(Av + " not sommet, "+Av + " est dans la line" + str(table + 1) + ", pile " + str(p1[0][0]) + ", emplacement1")
+
                    with open(self.dates(), "a") as folder:
                        folder.write("[" + self.times() + "]" + Av + " est dans la line" + str(table + 1) + ", pile " + str(
                            p1[0][0]) + ", emplacement1\n")
@@ -674,8 +693,9 @@ class main(QWidget,FORM_CLASS):
                    y = cur.fetchall()
 
                    if s2:
-                       print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                       self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                            s2[0][0]) + ", emplacement1")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "] " + "deplacer " + str(em3[0][0]) + " vers line" + str(
                                table + 1) + ", pile " + str(s2[0][0]) + ", emplacement1\n")
@@ -687,7 +707,8 @@ class main(QWidget,FORM_CLASS):
                            p1[0][0]) + "'")
                        con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
 
 
                    elif x:
@@ -695,8 +716,9 @@ class main(QWidget,FORM_CLASS):
                            "select emplacement1 from line" + str(table + 1) + " where pile = '" + str(x[0][0]) + "'")
                        emp1 = cur.fetchall()
                        if emp1[0][0] not in list_visit:
-                           print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                x[0][0]) + ", emplacement2")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em3[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(x[0][0]) + ", emplacement2\n")
@@ -708,7 +730,8 @@ class main(QWidget,FORM_CLASS):
                                p1[0][0]) + "'")
                            con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
 
 
 
@@ -720,8 +743,9 @@ class main(QWidget,FORM_CLASS):
                            "select emplacement2 from line" + str(table + 1) + " where pile = '" + str(y[0][0]) + "'")
                        emp3 = cur.fetchall()
                        if emp2[0][0] not in list_visit and emp3 not in list_visit:
-                           print("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em3[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                y[0][0]) + ", emplacement3")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "]" + " deplacer " + str(em3[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(y[0][0]) + ", emplacement3\n")
@@ -733,7 +757,8 @@ class main(QWidget,FORM_CLASS):
                                p1[0][0]) + "'")
                            con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
 
 
                    else:
@@ -752,8 +777,9 @@ class main(QWidget,FORM_CLASS):
                            dim_p[0][0]) + "' and emplacement1 not like '" + Av + "'")
                    y = cur.fetchall()
                    if s3:
-                       print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                       self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                            s3[0][0]) + ", emplacement1")
+
                        with open(self.dates(), "a") as folder:
                            folder.write("[" + self.times() + "]" + " deplacer " + str(em2[0][0]) + " vers line" + str(
                                table + 1) + ", pile " + str(s3[0][0]) + ", emplacement1\n")
@@ -766,7 +792,8 @@ class main(QWidget,FORM_CLASS):
                            p1[0][0]) + "'")
                        con.commit()
                        self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                       del list_visit[0]
+                       if list_visit:
+                          del list_visit[0]
 
                        return None
                    elif x:
@@ -775,8 +802,9 @@ class main(QWidget,FORM_CLASS):
                        emp1 = cur.fetchall()
 
                        if x[0][0] not in list_visit:
-                           print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                x[0][0]) + ", emplacement2")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "] " + "deplacer " + str(em2[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(x[0][0]) + ", emplacement2\n")
@@ -789,7 +817,8 @@ class main(QWidget,FORM_CLASS):
                                p1[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
@@ -802,8 +831,9 @@ class main(QWidget,FORM_CLASS):
                        emp3 = cur.fetchall()
 
                        if y[0][0] not in list_visit:
-                           print("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
+                           self.showdialog("deplacer " + str(em2[0][0]) + " vers line" + str(table + 1) + ", pile " + str(
                                y[0][0]) + ", emplacement3")
+
                            with open(self.dates(), "a") as folder:
                                folder.write("[" + self.times() + "] " + "deplacer " + str(em2[0][0]) + " vers line" + str(
                                    table + 1) + ", pile " + str(y[0][0]) + ", emplacement3\n")
@@ -816,7 +846,8 @@ class main(QWidget,FORM_CLASS):
                                p1[0][0]) + "'")
                            con.commit()
                            self.tableWidget_2.item(d[Av], 0).setBackground(QColor(255, 0, 0))
-                           del list_visit[0]
+                           if list_visit:
+                              del list_visit[0]
 
                            return None
 
@@ -826,7 +857,6 @@ class main(QWidget,FORM_CLASS):
 
                else:
                    pass
-                   # print("please verifier votre conteneur il n exsit pas dans ma base de donnes")
 
    def all():
        global l
@@ -850,8 +880,7 @@ class main(QWidget,FORM_CLASS):
           return None
 
       names = self.lineEdit.text()
-      #d[names] = f
-      #f+=1
+
       dimension_conteneur = int(self.comboBox.currentText())
       rowPosition = self.tableWidget.rowCount()
       self.tableWidget.insertRow(rowPosition)
@@ -893,10 +922,39 @@ class main(QWidget,FORM_CLASS):
        list_visita = list_visit
        print(list_visit)
        self.sorti(list_visita)
-   def clr(self):
 
-       self.tableWidget_2.clearContents()
-   #all()
+   def clr(self):
+       global list_visit
+       global d
+       global f
+       for r in range(self.tableWidget_2.rowCount()):
+           self.tableWidget_2.removeRow(0)
+       f = 0
+       d={}
+       list_visit = []
+
+   def clrst(self):
+       global list_visit
+       global d
+       global f
+       for r in range(self.tableWidget.rowCount()):
+           self.tableWidget_2.removeRow(0)
+       list_visit = []
+       d={}
+       f = 0
+
+
+   def showdialog(self,message):
+     msg = QMessageBox()
+     msg.setIcon(QMessageBox.Information)
+
+     msg.setText(message)
+     msg.setInformativeText("additional information")
+     msg.setWindowTitle("Zone De Stockage")
+     msg.setStandardButtons(QMessageBox.Ok)
+
+     retval = msg.exec_()
+
 def mainx():
     app = QApplication(sys.argv)
     window = main()
@@ -905,5 +963,3 @@ def mainx():
 
 if __name__ == '__main__':
     mainx()
-
-
